@@ -95,6 +95,7 @@ class CellGrid(Canvas):
             cell.draw()
             self.switched.append(cell)
 
+#Game of Life Code
 def invert(grid):
     for i in grid.grid:
         for j in i:
