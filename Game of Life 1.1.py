@@ -103,12 +103,13 @@ def invert(grid):
             j.draw()
     grid.update()
         
-def clear(grid):
+def clear(app, grid):
     for i in grid.grid:
         for j in i:
             j.fill = False
             j.draw()
     grid.update()
+    reset(app)
 
 def printout(grid):
     gridlist = {}
@@ -147,11 +148,15 @@ def create_window(app):
     width = Entry(window)
     width.grid(row=3, column=2)
     width.insert(0,25)
-    button6 = Button(window, text="Accept and Reset", command= lambda : reset(height, width, app)).grid(row=4, column=1)
+    button6 = Button(window, text="Accept and Reset", command= lambda : reset(app, height, width)).grid(row=4, column=1)
     
-def reset(height, width, app):
-    height = int(height.get())
-    width = int(width.get())
+def reset(app, height=None, width=None):
+    try:
+        height = int(height.get())
+        width = int(width.get())
+    except:
+        height = defheight
+        width = defwidth
     app.destroy()
     main(height, width)
     
@@ -218,7 +223,7 @@ def main(height,width):
     button_frame = Frame(app)
     button_frame.pack(side="bottom", expand=False)
     button = Button(button_frame, text="Commence Game of Life!", command=lambda : gameoflife(grid, lgt))
-    button2 = Button(app, text='Clear Grid', command = lambda : clear(grid))
+    button2 = Button(app, text='Clear Grid', command = lambda : clear(app, grid))
     button3 = Button(button_frame, text="Export Schematic", command = lambda : printout(grid))
     button4 = Button(button_frame, text='Import Schematic', command = lambda : importsc(grid))
     button5 = Button(button_frame, text='Settings', command = lambda : create_window(app))
