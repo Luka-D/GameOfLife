@@ -95,7 +95,8 @@ class CellGrid(Canvas):
             cell.draw()
             self.switched.append(cell)
 
-#Game of Life Code
+            
+#Game of Life Code Begins Here
 def invert(grid):
     for i in grid.grid:
         for j in i:
@@ -104,12 +105,15 @@ def invert(grid):
     grid.update()
         
 def clear(app, grid):
+    #Get Current Height and Width from grid list
+    height = len(grid.grid)
+    width = len(grid.grid[0]) #The length of the row (width) within the column list
     for i in grid.grid:
         for j in i:
             j.fill = False
             j.draw()
     grid.update()
-    reset(app)
+    reset(app, height, width)
 
 def printout(grid):
     gridlist = {}
@@ -148,15 +152,11 @@ def create_window(app):
     width = Entry(window)
     width.grid(row=3, column=2)
     width.insert(0,25)
-    button6 = Button(window, text="Accept and Reset", command= lambda : reset(app, height, width)).grid(row=4, column=1)
+    button6 = Button(window, text="Accept and Reset", command= lambda : reset(app, height.get(), width.get())).grid(row=4, column=1)
     
 def reset(app, height=None, width=None):
-    try:
-        height = int(height.get())
-        width = int(width.get())
-    except:
-        height = defheight
-        width = defwidth
+    height = int(height)
+    width = int(width)
     app.destroy()
     main(height, width)
     
