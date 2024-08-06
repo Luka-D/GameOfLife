@@ -15,5 +15,5 @@ This app uses libraries that come with the default python installation.
 
 1. Run the app
 
-       python3 Game of Life.py
+       python Game_Of_Life.py
 
