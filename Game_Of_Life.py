@@ -219,6 +219,7 @@ def gameoflife(grid, lgt):
     
 def main(height,width):
     app = Tk()
+    app.title("Conway's Game Of Life")
     grid = CellGrid(app, height, width, 10)
     button_frame = Frame(app)
     button_frame.pack(side="bottom", expand=False)
@@ -229,6 +230,7 @@ def main(height,width):
     button5 = Button(button_frame, text='Settings', command = lambda : create_window(app))
     label = Label(button_frame, text="Number of Iterations").grid(row=2, column=1)
     lgt = Entry(button_frame)
+    lgt.insert(0, 10)
     grid.pack()
     button.grid(row=1, column=1)
     button2.pack()
