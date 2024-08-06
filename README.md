@@ -1,6 +1,6 @@
 # GameOfLife
 
-Conway's Game of Life in implemented in Python with a simple TKinter GUI.
+Conway's Game of Life implemented in Python with a simple TKinter GUI.
 
 Code for the Grid from Arthur Vaïsse on Stack Overflow.
 
@@ -10,7 +10,9 @@ You can run the game by inputting your desired amount of iterations into the box
 
 You can save your drawings by clicking Export Schematic, which will save it as a .txt file that can be imported later. 
 
-Clicking the "Settings" button will take you to the setting menu where you can change the height and width of the board.
+Clicking the "Settings" button will take you to a menu where you can change the height and width of the board.
+
+Ideas or feature requests are welcome!
 
 ## Prerequisites
 
