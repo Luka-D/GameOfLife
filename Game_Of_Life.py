@@ -113,33 +113,33 @@ def clear(app, grid):
             j.fill = False
             j.draw()
     grid.update()
-    reset(app, height, width)
 
-def printout(grid):
+def export_schematic(grid):
+    #Get Current Height and Width from grid list
+    height = len(grid.grid)
+    width = len(grid.grid[0])
+    #Save all current grid values into the gridlist
     gridlist = {}
     for i in grid.grid:
         for j in i:
             gridlist[j.abs, j.ord] = j.fill
-    #for i in gridlist:
-    #        print(i,gridlist[i])
     fout = filedialog.asksaveasfile(mode='w', defaultextension=".txt", initialdir = "C:\\", title = "Select file", filetypes = (("Text files","*.txt"),("all files","*.*")))
-    gridlist_new = dict([(str(i),j) for i,j in gridlist.items()])
-    fout.write(json.dumps(gridlist_new))
+    gridlist = dict([(str(i),j) for i,j in gridlist.items()])
+    export_dictionary = {"size": (height, width), "values": gridlist}
+    fout.write(json.dumps(export_dictionary))
     fout.close()
 
-def importsc(grid):
+def import_schematic(app, grid):
     fin = filedialog.askopenfilename(defaultextension=".txt", initialdir = "C:\\", title = "Select file", filetypes = (("Text files","*.txt"),("all files","*.*")))
     with open(fin, 'r') as f:
         data = json.load(f)
-        newdict = dict([(eval(str(i)),j) for i,j in data.items()])
-    #for i in newdict:
-     #   print(i,newdict[i])
-    for i in grid.grid:
-        for j in i:
-            if (j.abs, j.ord) in newdict:
-                j.fill = newdict[(j.abs, j.ord)]
-                j.draw()
-    grid.update()
+        grid_size = data["size"]
+        height = grid_size[0]
+        width = grid_size[1]
+        grid_values = data['values']
+        grid_values_dict = dict([(eval(str(i)),j) for i,j in grid_values.items()])
+    app.destroy()
+    main(height, width, grid_values_dict)
 
 def create_window(app):
     window = Toplevel(app)
@@ -160,7 +160,7 @@ def reset(app, height=None, width=None):
     app.destroy()
     main(height, width)
     
-def gameoflife(grid, lgt):
+def game_of_life(grid, lgt):
     len = int(lgt.get())
     for l in range(len):
         indices = {}
@@ -217,16 +217,16 @@ def gameoflife(grid, lgt):
     invert(grid)
     invert(grid)
     
-def main(height,width):
+def main(height, width, schematic = None):
     app = Tk()
     app.title("Conway's Game Of Life")
     grid = CellGrid(app, height, width, 10)
     button_frame = Frame(app)
     button_frame.pack(side="bottom", expand=False)
-    button = Button(button_frame, text="Commence Game of Life!", command=lambda : gameoflife(grid, lgt))
+    button = Button(button_frame, text="Commence Game of Life!", command=lambda : game_of_life(grid, lgt))
     button2 = Button(app, text='Clear Grid', command = lambda : clear(app, grid))
-    button3 = Button(button_frame, text="Export Schematic", command = lambda : printout(grid))
-    button4 = Button(button_frame, text='Import Schematic', command = lambda : importsc(grid))
+    button3 = Button(button_frame, text="Export Schematic", command = lambda : export_schematic(grid))
+    button4 = Button(button_frame, text='Import Schematic', command = lambda : import_schematic(app, grid))
     button5 = Button(button_frame, text='Settings', command = lambda : create_window(app))
     label = Label(button_frame, text="Number of Iterations").grid(row=2, column=1)
     lgt = Entry(button_frame)
@@ -238,6 +238,16 @@ def main(height,width):
     button4.grid(row=1, column=3)
     button5.grid(row=3, column=2)
     lgt.grid(row=2, column=2)
+
+    # If schematic is provided, populate the grid with the values from the scheamtic
+    if schematic:
+        for i in grid.grid:
+            for j in i:
+                if (j.abs, j.ord) in schematic:
+                    j.fill = schematic[(j.abs, j.ord)]
+                    j.draw()
+        grid.update()
+
     app.mainloop()
     
 if __name__ == "__main__":
